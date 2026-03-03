@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-
+import type { Reserve } from '../index';
 type WildlifeTrustReserveListing = {
   name: string;
   lat: string;
@@ -80,11 +80,19 @@ async function getReserveList(): Promise<WildlifeTrustReserveListing[]> {
   } as WildlifeTrustReserveListing))
 }
 
-export default async function (): Promise<WildlifeTrustReserve[]> {
+export default async function (): Promise<Reserve[]> {
   const reserveList = await getReserveList();
-  const reserves = await Promise.all(reserveList.slice(0, 5).map(async reserveListing => {
+  const reserves = await Promise.all(reserveList.slice(0, 3).map(async reserveListing => {
     const reserveDetails = await getReserveDetails(reserveListing)
     return { ...reserveListing, ...reserveDetails }
   }))
-  console.log(reserves)
+  return reserves.map(reserve => ({
+    name: reserve.name,
+    lat: Number(reserve.lat),
+    lng: Number(reserve.lng),
+    url: reserve.url,
+    description: reserve.description,
+    mapThumbnailUrl: reserve.mapThumbnailUrl,
+    mapUrl: reserve.mapUrl
+  }))
 }
