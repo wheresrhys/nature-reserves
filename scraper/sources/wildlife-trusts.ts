@@ -50,7 +50,7 @@ async function validateReserveUrl(url: string | null | undefined, reserveName: s
 }
 
 function extractMapUrl(html: string | null | undefined): {mapThumbnailUrl: string | null | undefined, mapUrl: string | null | undefined} {
-  if (!html) return null
+  if (!html) return {mapThumbnailUrl: null, mapUrl: null}
   const mapDOM = new JSDOM(html).window.document
   const mapThumbnailUrl = mapDOM.querySelector('.paragraph--type--image-gallery img[alt$=" map"]')?.getAttribute('data-lazy') ?? null
   const mapUrl = mapThumbnailUrl?.replace('styles/scaled_12_col_desk/', 'styles/gallery_image_default/') ?? null
